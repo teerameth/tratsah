@@ -28,8 +28,7 @@ int main(int argc, char * argv[])
 
   node = std::make_shared<rclcpp::Node>("velocity_test_node");
 
-  auto publisher = node->create_publisher<std_msgs::msg::Float64MultiArray>(
-    "/velocity_controller/commands", 10);
+  auto publisher = node->create_publisher<std_msgs::msg::Float64MultiArray>("/velocity_controller/commands", 10);
 
   RCLCPP_INFO(node->get_logger(), "node created");
 
@@ -37,19 +36,35 @@ int main(int argc, char * argv[])
 
   using namespace std::chrono_literals;
 
-  commands.data.push_back(0);
+  // Setup dimension
+  std::vector<double> vec1 = { 1, 1, 1, 1};
+  commands.layout.dim.push_back(std_msgs::msg::MultiArrayDimension());
+  commands.layout.dim[0].size = vec1.size();
+  commands.layout.dim[0].stride = 4;
+  commands.layout.dim[0].label = "x"; // Label
+  // commands.data.push_back(0);
+  // commands.data.push_back(0);
+  commands.data.clear();
+  commands.data.insert(commands.data.end(), vec1.begin(), vec1.end());
+
   publisher->publish(commands);
   std::this_thread::sleep_for(1s);
 
-  commands.data[0] = 1;
+  // commands.data[0] = 1;
+  // commands.data[1] = -1;
   publisher->publish(commands);
   std::this_thread::sleep_for(3s);
 
-  commands.data[0] = -1;
+  vec1 = { -1, -1, -1, -1};
+  commands.data.clear();
+  commands.data.insert(commands.data.end(), vec1.begin(), vec1.end());
+  // commands.data[0] = -1;
+  // commands.data[1] = 1;
   publisher->publish(commands);
   std::this_thread::sleep_for(3s);
 
-  commands.data[0] = 0;
+  // commands.data[0] = 0;
+  // commands.data[1] = 0;
   publisher->publish(commands);
   std::this_thread::sleep_for(1s);
   rclcpp::shutdown();

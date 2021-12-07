@@ -53,6 +53,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/teleop_twist_keyboard.py
   scripts/publisher_member_function.py
+  scripts/subscriber_member_function.py
   scripts/teleop_omni_keyboard.py
   DESTINATION lib/${PROJECT_NAME}
 )
