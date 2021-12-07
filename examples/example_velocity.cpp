@@ -17,8 +17,8 @@
 #include <vector>
 
 #include "rclcpp/rclcpp.hpp"
-
 #include "std_msgs/msg/float64_multi_array.hpp"
+#define sqrt_2 1.41421356237
 
 std::shared_ptr<rclcpp::Node> node;
 
@@ -40,33 +40,29 @@ int main(int argc, char * argv[])
   std::vector<double> vec1 = { 1, 1, 1, 1};
   commands.layout.dim.push_back(std_msgs::msg::MultiArrayDimension());
   commands.layout.dim[0].size = vec1.size();
-  commands.layout.dim[0].stride = 4;
+  commands.layout.dim[0].stride = 1;
   commands.layout.dim[0].label = "x"; // Label
-  // commands.data.push_back(0);
-  // commands.data.push_back(0);
+
   commands.data.clear();
-  commands.data.insert(commands.data.end(), vec1.begin(), vec1.end());
+  commands.data.insert(commands.data.end(), vec1.begin(), vec1.end()); // Copy from
 
-  publisher->publish(commands);
-  std::this_thread::sleep_for(1s);
-
-  // commands.data[0] = 1;
-  // commands.data[1] = -1;
   publisher->publish(commands);
   std::this_thread::sleep_for(3s);
 
   vec1 = { -1, -1, -1, -1};
   commands.data.clear();
   commands.data.insert(commands.data.end(), vec1.begin(), vec1.end());
-  // commands.data[0] = -1;
-  // commands.data[1] = 1;
+
   publisher->publish(commands);
   std::this_thread::sleep_for(3s);
 
-  // commands.data[0] = 0;
-  // commands.data[1] = 0;
+  vec1 = {0, 0, 0, 0};
+  commands.data.clear();
+  commands.data.insert(commands.data.end(), vec1.begin(), vec1.end());
+
   publisher->publish(commands);
-  std::this_thread::sleep_for(1s);
+  std::this_thread::sleep_for(3s);
+
   rclcpp::shutdown();
 
   return 0;

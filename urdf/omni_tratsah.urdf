@@ -50,14 +50,14 @@
         <mass value="5.0"/>
         <inertia ixx="0.13052" ixy="0" ixz="0" iyy="0.13052" iyz="0" izz="0.55506"/>
       </inertial>
-      <visual name="Base">
+      <visual name="base">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <mesh filename="/home/teera/dev_ws/src/tratsah/meshes/dae/Cube.001.dae" scale="0.5 0.5 0.1"/>
         </geometry>
         <material name="Green"/>
       </visual>
-      <collision name="Base">
+      <collision name="base">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <box size="0.81613 0.81613 0.2"/>
@@ -161,9 +161,9 @@
     </joint>
 
     <gazebo reference="imu">
-      <sensor name="cart_imu_sensor" type="imu">
+      <sensor name="imu_sensor" type="imu">
         <always_on>1</always_on>
-        <update_rate>10.0</update_rate>
+        <update_rate>50.0</update_rate>
       </sensor>
     </gazebo>
 
@@ -207,7 +207,7 @@
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
-      <sensor name="cart_imu_sensor">
+      <sensor name="imu_sensor">
         <state_interface name="orientation.x"/>
         <state_interface name="orientation.y"/>
         <state_interface name="orientation.z"/>
@@ -225,6 +225,16 @@
       <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
         <parameters>/home/teera/dev_ws/src/tratsah/config/omni_base_controller_velocity.yaml</parameters>
       </plugin>
+      <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>100.0</updateRate>
+        <body_name>base</body_name>
+        <topicName>odom</topicName>
+        <gaussianNoise>0.01</gaussianNoise>
+        <frameName>world</frameName>
+        <xyzOffsets>0 0 0</xyzOffsets>
+        <rpyOffsets>0 0 0</rpyOffsets>
+      </plugin>
     </gazebo>
-
+    
   </robot>
