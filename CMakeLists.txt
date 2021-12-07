@@ -43,6 +43,7 @@ ament_target_dependencies(example_velocity
   std_msgs
 )
 
+
 # Install Cpp executables
 install(TARGETS hello_world example_velocity
   DESTINATION lib/${PROJECT_NAME})
@@ -54,7 +55,9 @@ install(PROGRAMS
   scripts/teleop_twist_keyboard.py
   scripts/publisher_member_function.py
   scripts/subscriber_member_function.py
+  scripts/teleop_omni_joystick.py
   scripts/teleop_omni_keyboard.py
+  scripts/controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
