@@ -15,13 +15,14 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
+# Find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
 
+# Include Cpp "include" directory
 install(DIRECTORY
   launch
   config
@@ -30,6 +31,7 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
 )
 
+# Create Cpp executable
 add_executable(hello_world src/hello_world.cpp)
 target_include_directories(hello_world PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -41,9 +43,21 @@ ament_target_dependencies(example_velocity
   std_msgs
 )
 
+# Install Cpp executables
 install(TARGETS hello_world example_velocity
   DESTINATION lib/${PROJECT_NAME})
 
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+# Install Python executables
+install(PROGRAMS
+  scripts/teleop_twist_keyboard.py
+  scripts/publisher_member_function.py
+  scripts/teleop_omni_keyboard.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+  
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_lint_auto REQUIRED)
