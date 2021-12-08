@@ -13,6 +13,7 @@ sqrt_2 = 1.41421356237
 r = 0.25 # wheel_radius
 d = 0.45 * sqrt_2 # base_diameter
 turn_speed = 10
+
 def trunc(values, decs=2):
     return np.trunc(values*10**decs)/(10**decs)
 class Controller(Node):
@@ -50,21 +51,26 @@ class Controller(Node):
         
     def teleop_callback(self, data:Float32MultiArray): # Callback function when got teleop command
         [v_x, v_y, zeta] = data.data # v_x = [-1, 1], v_y = [-1, 1], zeta = [-3.14, 3.14]
-        v = v_x*100
-        vn = v_y*100
-        print(trunc(zeta), trunc(self.yawn))
+        
+        # v = v_x*50
+        # vn = v_y*50
+        
+        v = (-v_x*math.cos(self.yawn+math.pi/4) - v_y*math.sin(self.yawn+math.pi/4))*50
+        vn = (-v_y*math.cos(self.yawn+math.pi/4) + v_x*math.sin(self.yawn+math.pi/4))*50
+
+        # print(trunc(zeta), trunc(self.yawn))
         omega = (zeta - self.yawn)
         if omega > math.pi: omega -= 2*math.pi
         if omega < -math.pi: omega += 2*math.pi
-        print(trunc(omega))
+        # print(trunc(omega))
         omega = -omega
         if abs(omega) < 0.1: omega = 0
         if omega > 0 and omega < turn_speed: omega = turn_speed
         if omega < 0 and omega > -turn_speed: omega = -turn_speed
-        
+
         [v_fr, v_fl, v_bl, v_br] = np.dot(np.array([[0, 1, d], [-1, 0, d], [0, -1, d], [1, 0, d]]), np.array([v, vn, omega]))
         self.array.data = [v*r for v in [v_fl, v_fr, v_bl, v_br]]
-        print([round(v, 2) for v in self.array.data])
+        # print([round(v, 2) for v in self.array.data])
     def timer_callback(self):
         # self.array.data = [1.0, 0.0, 1.0, 0.0]
         # print(self.array.data)

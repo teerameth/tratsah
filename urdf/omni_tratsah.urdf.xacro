@@ -2,40 +2,38 @@
 <!-- created with Phobos 1.0.1 "Capricious Choutengan" -->
   <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="omni_tratsah">
 
-    <!-- <xacro:include filename="$(find tratsah)/urdf/rim.urdf.xacro"/>
-    <xacro:rim_macro name="right" xyz="0.5 0.5 0.5" rpy="0 0 0" color="0.1 0.1 0.1"/> -->
-
-
+    <xacro:include filename="$(find tratsah)/urdf/gazebo.urdf.xacro" />
 	  <xacro:include filename="$(find tratsah)/urdf/wheel.urdf.xacro" />
+
     <xacro:omni_wheel wheel_prefix="front_right">
-		  <origin xyz="0.0658 0.0658 0" rpy="1.570796326794896 0 -0.78539816339"/>
-    </xacro:omni_wheel>	
+		  <origin xyz="0.45 0.45 0" rpy="1.5708 0 2.35619"/>
+    </xacro:omni_wheel>
     <xacro:omni_wheel wheel_prefix="front_left">
-      <origin xyz="0.0658 -0.0658 0" rpy="1.570796326794896 0 -2.35619449019"/>
+      <origin xyz="-0.45 0.45 0" rpy="1.5708 0 -2.35619"/>
+    </xacro:omni_wheel>
+    <xacro:omni_wheel wheel_prefix="back_right">
+      <origin xyz="0.45 -0.45 0" rpy="1.5708 0 0.7854"/>
     </xacro:omni_wheel>
     <xacro:omni_wheel wheel_prefix="back_left">
-      <origin xyz="-0.0658 -0.0658 0" rpy="1.570796326794896 0 2.35619449019"/>
-    </xacro:omni_wheel>	
-    <xacro:omni_wheel wheel_prefix="back_right">
-      <origin xyz="-0.0658 0.0658 0" rpy="1.570796326794896 0 0.78539816339"/>
+      <origin xyz="-0.45 -0.45 0" rpy="1.5708 0 -0.7854"/>
     </xacro:omni_wheel>
 
 
-    <link name="base">
+    <link name="base_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <mass value="5.0"/>
         <inertia ixx="0.13052" ixy="0" ixz="0" iyy="0.13052" iyz="0" izz="0.55506"/>
       </inertial>
-      <visual name="base">
+      <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <!-- <mesh filename="$(find tratsah)/meshes/dae/Cube.001.dae" scale="0.5 0.5 0.1"/> -->
-          <mesh filename="$(find tratsah)/meshes/dae/Cube.001.dae" scale="0.05 0.05 0.01"/>
+          <mesh filename="$(find tratsah)/meshes/dae/Cube.001.dae" scale="0.5 0.5 0.1"/>
+          <!-- <mesh filename="$(find tratsah)/meshes/dae/Cube.001.dae" scale="0.05 0.05 0.01"/> -->
         </geometry>
         <material name="Green"/>
       </visual>
-      <!-- <collision name="base">
+      <!-- <collision name="base_link">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <box size="0.81613 0.81613 0.2"/>
@@ -43,121 +41,37 @@
       </collision> -->
     </link>
 
-    <!-- <link name="back_left_wheel">
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="0.5"/>
-        <inertia ixx="0.00044" ixy="0.00014" ixz="0" iyy="0.00044" iyz="0" izz="0.0003"/>
-      </inertial>
-      <visual name="back_left_wheel">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <mesh filename="$(find tratsah)/meshes/dae/Torus.dae" scale="0.2 0.2 0.2"/>
-        </geometry>
-        <material name="Black"/>
-      </visual>
-      <collision name="back_left_wheel">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius="0.25" length="0.1"/>
-        </geometry>
-      </collision>
-    </link>
-
-    <link name="back_right_wheel">
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="0.5"/>
-        <inertia ixx="0.00044" ixy="-0.00014" ixz="0" iyy="0.00044" iyz="0" izz="0.0003"/>
-      </inertial>
-      <visual name="back_right_wheel">
-        <origin xyz="0 0 0" rpy="0 3.14159 0"/>
-        <geometry>
-          <mesh filename="$(find tratsah)/meshes/dae/Torus.dae" scale="0.2 0.2 0.2"/>
-        </geometry>
-        <material name="Black"/>
-      </visual>
-      <collision name="back_right_wheel">
-        <origin xyz="0 0 0" rpy="0 3.14159 0.7854"/>
-        <geometry>
-          <cylinder radius="0.25" length="0.1"/>
-        </geometry>
-      </collision>
-    </link>
-
-    <link name="front_left_wheel">
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="0.5"/>
-        <inertia ixx="0.00044" ixy="-0.00014" ixz="0" iyy="0.00044" iyz="0" izz="0.0003"/>
-      </inertial>
-      <visual name="front_left_wheel">
-        <origin xyz="0 0 0" rpy="0 3.14159 0"/>
-        <geometry>
-          <mesh filename="$(find tratsah)/meshes/dae/Torus.dae" scale="0.2 0.2 0.2"/>
-        </geometry>
-        <material name="Black"/>
-      </visual>
-      <collision name="front_left_wheel">
-        <origin xyz="0 0 0" rpy="0 3.14159 0"/>
-        <geometry>
-          <cylinder radius="0.25" length="0.1"/>
-        </geometry>
-      </collision>
-    </link>
-
-    <link name="front_right_wheel">
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="0.5"/>
-        <inertia ixx="0.00044" ixy="0.00014" ixz="0" iyy="0.00044" iyz="0" izz="0.0003"/>
-      </inertial>
-      <visual name="front_right_wheel">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <mesh filename="$(find tratsah)/meshes/dae/Torus.dae" scale="0.2 0.2 0.2"/>
-        </geometry>
-        <material name="Black"/>
-      </visual>
-      <collision name="front_right_wheel">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius="0.25" length="0.1"/>
-        </geometry>
-      </collision>
-    </link> -->
-
-    <joint name="back_left_wheel" type="continuous">
-      <origin xyz="-0.45 -0.45 0" rpy="1.5708 0 -0.7854"/>
-      <parent link="base"/>
-      <child link="back_left_wheel_link"/>
-      <axis xyz="0 0 1.0"/>
-      <limit effort="2.4" velocity="1.0"/>
-    </joint>
-
-    <joint name="back_right_wheel" type="continuous">
-      <origin xyz="0.45 -0.45 0" rpy="1.5708 0 0.7854"/>
-      <parent link="base"/>
-      <child link="back_right_wheel_link"/>
+    <!-- <joint name="front_right_wheel" type="continuous">
+      <origin xyz="0.45 0.45 0" rpy="1.5708 0 2.35619"/>
+      <parent link="base_link"/>
+      <child link="front_right_wheel_link"/>
       <axis xyz="0 0 1.0"/>
       <limit effort="2.4" velocity="1.0"/>
     </joint>
 
     <joint name="front_left_wheel" type="continuous">
       <origin xyz="-0.45 0.45 0" rpy="1.5708 0 -2.35619"/>
-      <parent link="base"/>
+      <parent link="base_link"/>
       <child link="front_left_wheel_link"/>
       <axis xyz="0 0 1.0"/>
       <limit effort="2.4" velocity="1.0"/>
     </joint>
 
-    <joint name="front_right_wheel" type="continuous">
-      <origin xyz="0.45 0.45 0" rpy="1.5708 0 2.35619"/>
-      <parent link="base"/>
-      <child link="front_right_wheel_link"/>
+    <joint name="back_right_wheel" type="continuous">
+      <origin xyz="0.45 -0.45 0" rpy="1.5708 0 0.7854"/>
+      <parent link="base_link"/>
+      <child link="back_right_wheel_link"/>
       <axis xyz="0 0 1.0"/>
       <limit effort="2.4" velocity="1.0"/>
     </joint>
+
+    <joint name="back_left_wheel" type="continuous">
+      <origin xyz="-0.45 -0.45 0" rpy="1.5708 0 -0.7854"/>
+      <parent link="base_link"/>
+      <child link="back_left_wheel_link"/>
+      <axis xyz="0 0 1.0"/>
+      <limit effort="2.4" velocity="1.0"/>
+    </joint> -->
 
     <material name="Black">
       <color rgba="0.00887 0.00887 0.00887 1.0"/>
@@ -175,7 +89,7 @@
     </link>
     <joint name="cart_to_imu" type="fixed">
       <origin xyz="0.0 0.0 0.0"/>
-      <parent link="base"/>
+      <parent link="base_link"/>
       <child link="imu"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
@@ -227,7 +141,7 @@
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
-      <sensor name="imu_sensor">
+      <!-- <sensor name="imu_sensor">
         <state_interface name="orientation.x"/>
         <state_interface name="orientation.y"/>
         <state_interface name="orientation.z"/>
@@ -238,7 +152,7 @@
         <state_interface name="linear_acceleration.x"/>
         <state_interface name="linear_acceleration.y"/>
         <state_interface name="linear_acceleration.z"/>
-      </sensor>
+      </sensor> -->
     </ros2_control>
 
     <gazebo>
@@ -248,7 +162,7 @@
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>100.0</updateRate>
-        <body_name>base</body_name>
+        <body_name>base_link</body_name>
         <topicName>odom</topicName>
         <gaussianNoise>0.01</gaussianNoise>
         <frameName>world</frameName>

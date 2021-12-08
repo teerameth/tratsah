@@ -31,6 +31,7 @@ def generate_launch_description():
     xacro.process_doc(doc)
     params = {'robot_description': doc.toxml()}
 
+    ### For Xacro ###
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -38,6 +39,7 @@ def generate_launch_description():
         parameters=[params]
     )
 
+    ### For URDF ###
     # node_robot_state_publisher = Node(
     #     package='robot_state_publisher',
     #     executable='robot_state_publisher',

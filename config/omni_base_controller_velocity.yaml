@@ -14,10 +14,10 @@ controller_manager:
 velocity_controller:
   ros__parameters:
     joints:
-      - front_left_motor
-      - front_right_motor
-      - back_left_motor
-      - back_right_motor
+      - front_left_wheel
+      - front_right_wheel
+      - back_left_wheel
+      - back_right_wheel
     command_interfaces:
       - velocity
     state_interfaces:
