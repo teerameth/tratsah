@@ -4,6 +4,8 @@ from ament_index_python.packages import get_package_share_directory
 
 
 from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch.conditions import IfCondition
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -67,6 +69,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    gui = LaunchConfiguration('gui')
+    start_joint_state_publisher_gui_node = Node(
+        condition=IfCondition(gui),
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui')
+
     return LaunchDescription([
         RegisterEventHandler(
             event_handler=OnProcessExit(
@@ -89,4 +98,5 @@ def generate_launch_description():
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
+        start_joint_state_publisher_gui_node,
     ])
