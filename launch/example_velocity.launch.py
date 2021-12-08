@@ -9,7 +9,7 @@ from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
-
+import xacro
 
 def generate_launch_description():
     gazebo = IncludeLaunchDescription(
@@ -19,17 +19,31 @@ def generate_launch_description():
     tratsah_path = os.path.join(
         get_package_share_directory('tratsah'))
     
-    urdf_path = os.path.join(tratsah_path,
+    # urdf_path = os.path.join(tratsah_path,
+    #                           'urdf',
+    #                           'omni_tratsah.urdf')
+    # urdf = open(urdf_path).read()
+
+    xacro_file = os.path.join(tratsah_path,
                               'urdf',
-                              'omni_tratsah.urdf')
-    urdf = open(urdf_path).read()
+                              'omni_tratsah.urdf.xacro')
+    doc = xacro.parse(open(xacro_file))
+    xacro.process_doc(doc)
+    params = {'robot_description': doc.toxml()}
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[{'robot_description': urdf}]
+        parameters=[params]
     )
+
+    # node_robot_state_publisher = Node(
+    #     package='robot_state_publisher',
+    #     executable='robot_state_publisher',
+    #     output='screen',
+    #     parameters=[{'robot_description': urdf}]
+    # )
 
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',

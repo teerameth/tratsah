@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
+from numpy.lib.twodim_base import triu_indices_from
 import rclpy
 from rclpy import publisher
 from rclpy.node import Node
 from std_msgs.msg import String, Float64MultiArray, Float32MultiArray
 from nav_msgs.msg import Odometry
 
+import math
 import numpy as np
 
+sqrt_2 = 1.41421356237
+r = 0.25 # wheel_radius
+d = 0.45 * sqrt_2 # base_diameter
+turn_speed = 10
+def trunc(values, decs=2):
+    return np.trunc(values*10**decs)/(10**decs)
 class Controller(Node):
     def __init__(self):
         super().__init__('omnibase')
         self.publisher_ = self.create_publisher(Float64MultiArray, "/velocity_controller/commands", 10)
-        timer_period = 0.5  # seconds
+        timer_period = 0.1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
         # Create the subscriber (recieve odometry)
@@ -38,14 +46,28 @@ class Controller(Node):
 
     def odom_callback(self, data:Odometry): # Callback function when got odom
         q = data.pose.pose.orientation
-        self.yawn = euler_from_quaternion(q)[2]*180  # Robot yawn angle
+        self.yawn = euler_from_quaternion(q)[2]  # Robot yawn angle (radian)
         
     def teleop_callback(self, data:Float32MultiArray): # Callback function when got teleop command
-        print(data.data) # v_x = [-1, 1], v_y = [-1, 1], omega_z = [-3.14, 3.14]
+        [v_x, v_y, zeta] = data.data # v_x = [-1, 1], v_y = [-1, 1], zeta = [-3.14, 3.14]
+        v = v_x*100
+        vn = v_y*100
+        print(trunc(zeta), trunc(self.yawn))
+        omega = (zeta - self.yawn)
+        if omega > math.pi: omega -= 2*math.pi
+        if omega < -math.pi: omega += 2*math.pi
+        print(trunc(omega))
+        omega = -omega
+        if abs(omega) < 0.1: omega = 0
+        if omega > 0 and omega < turn_speed: omega = turn_speed
+        if omega < 0 and omega > -turn_speed: omega = -turn_speed
         
-
+        [v_fr, v_fl, v_bl, v_br] = np.dot(np.array([[0, 1, d], [-1, 0, d], [0, -1, d], [1, 0, d]]), np.array([v, vn, omega]))
+        self.array.data = [v*r for v in [v_fl, v_fr, v_bl, v_br]]
+        print([round(v, 2) for v in self.array.data])
     def timer_callback(self):
-        self.array.data = [1.0, 0.0, 1.0, 0.0]
+        # self.array.data = [1.0, 0.0, 1.0, 0.0]
+        # print(self.array.data)
         self.publisher_.publish(self.array)
 def main(args = None):
     rclpy.init(args=args)

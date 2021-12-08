@@ -23,7 +23,7 @@ class JoystickPub(Node):
         clock = pygame.time.Clock() # Used to manage how fast the screen updates
         pygame.joystick.init()      # Initialize the joysticks
         self.textPrint = TextPrint()     # Get ready to print
-
+        self.omega_z = 0.0
 
     def timer_callback(self):   # Joystick timer callback
         ### Data ###
@@ -91,8 +91,9 @@ class JoystickPub(Node):
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
         ### Prepare data & send ###
-        omega_z = math.atan2(-axes_value[4], axes_value[3])
-        self.array.data = [axes_value[0], -axes_value[1], omega_z]  # [v_x, v_y, omega_z]
+        if abs(axes_value[3]) + abs(axes_value[4]) > 1: # Update only joystick moved more than half distance
+            self.omega_z = math.atan2(-axes_value[4], axes_value[3])
+        self.array.data = [axes_value[0], -axes_value[1], self.omega_z]  # [v_x, v_y, omega_z]
         self.publisher_.publish(self.array)
 
 def main(args = None):

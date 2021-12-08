@@ -28,6 +28,7 @@ install(DIRECTORY
   config
   urdf
   meshes
+  xacro
   DESTINATION share/${PROJECT_NAME}/
 )
 
