@@ -1,69 +1,66 @@
+# Copyright 2020 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
 
 
 from launch import LaunchDescription
-from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
+
 import xacro
 
+
 def generate_launch_description():
-    
-    # gazebo = IncludeLaunchDescription(
-    #             PythonLaunchDescriptionSource([os.path.join(
-    #                 get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-    #          )
+    gazebo = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
+             )
+
+    gazebo_ros2_control_demos_path = os.path.join(
+        get_package_share_directory('gazebo_ros2_control_demos'))
+
     tratsah_path = os.path.join(
         get_package_share_directory('tratsah'))
-    
-    world_file_name = "test.world"
-    world_path = os.path.join(tratsah_path, "worlds", world_file_name)
-    gazebo = ExecuteProcess(
-        cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_factory.so', world_path],
-        output='screen')
 
-    # urdf_path = os.path.join(tratsah_path,
-    #                           'urdf',
-    #                           'omni_tratsah.urdf')
-    # urdf = open(urdf_path).read()
-
-    xacro_file = os.path.join(tratsah_path,
+    urdf_path = os.path.join(tratsah_path,
                               'urdf',
-                              'omni_tratsah.urdf.xacro')
-    doc = xacro.parse(open(xacro_file))
-    xacro.process_doc(doc)
-    params = {'robot_description': doc.toxml()}
+                              'planar.urdf')
+    urdf = open(urdf_path).read()
 
-    ### For Xacro ###
+    ### For URDF ###
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[params]
+        parameters=[{'robot_description': urdf}]
     )
 
-    ### For URDF ###
-    # node_robot_state_publisher = Node(
-    #     package='robot_state_publisher',
-    #     executable='robot_state_publisher',
-    #     output='screen',
-    #     parameters=[{'robot_description': urdf}]
-    # )
 
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'test_omni_robot'],
+                                   '-entity', 'cartpole'],
                         output='screen')
 
     load_joint_state_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start', 'joint_state_broadcaster'],
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+             'joint_state_broadcaster'],
         output='screen'
     )
 
@@ -77,18 +74,7 @@ def generate_launch_description():
         output='screen'
     )
 
-    # gui = LaunchConfiguration('gui')
-    # start_joint_state_publisher_gui_node = Node(
-    #     condition=IfCondition(gui),
-    #     package='joint_state_publisher_gui',
-    #     executable='joint_state_publisher_gui',
-    #     name='joint_state_publisher_gui')
-
     return LaunchDescription([
-        DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='true',
-            description='Use simulation (Gazebo) clock if true'),
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=spawn_entity,
@@ -110,5 +96,4 @@ def generate_launch_description():
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        # start_joint_state_publisher_gui_node,
     ])

@@ -15,20 +15,13 @@ from launch_ros.actions import Node
 import xacro
 
 def generate_launch_description():
-    
-    # gazebo = IncludeLaunchDescription(
-    #             PythonLaunchDescriptionSource([os.path.join(
-    #                 get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-    #          )
+    gazebo = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
+             )
     tratsah_path = os.path.join(
         get_package_share_directory('tratsah'))
     
-    world_file_name = "test.world"
-    world_path = os.path.join(tratsah_path, "worlds", world_file_name)
-    gazebo = ExecuteProcess(
-        cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_factory.so', world_path],
-        output='screen')
-
     # urdf_path = os.path.join(tratsah_path,
     #                           'urdf',
     #                           'omni_tratsah.urdf')
@@ -36,7 +29,7 @@ def generate_launch_description():
 
     xacro_file = os.path.join(tratsah_path,
                               'urdf',
-                              'omni_tratsah.urdf.xacro')
+                              'planar_tratsah.urdf.xacro') # planar_tratsah.urdf.xacro
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc)
     params = {'robot_description': doc.toxml()}
@@ -57,32 +50,25 @@ def generate_launch_description():
     #     parameters=[{'robot_description': urdf}]
     # )
 
+    world_file_name = "test.world"
+    world_path = os.path.join(tratsah_path, "worlds", world_file_name)
+    gazebo = ExecuteProcess(
+        cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_factory.so', world_path],
+        output='screen')
+        
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'test_omni_robot'],
+                                   '-entity', 'tratsah',
+                                   "-x -1.0", "-y -1.0", "-z 0.0"],
                         output='screen')
+# 
 
     load_joint_state_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'start', 'joint_state_broadcaster'],
         output='screen'
     )
 
-    load_joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start', 'velocity_controller'],
-        output='screen'
-    )
 
-    load_imu_sensor_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', 'imu_sensor_broadcaster'],
-        output='screen'
-    )
-
-    # gui = LaunchConfiguration('gui')
-    # start_joint_state_publisher_gui_node = Node(
-    #     condition=IfCondition(gui),
-    #     package='joint_state_publisher_gui',
-    #     executable='joint_state_publisher_gui',
-    #     name='joint_state_publisher_gui')
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -95,20 +81,7 @@ def generate_launch_description():
                 on_exit=[load_joint_state_controller],
             )
         ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_controller,
-                on_exit=[load_joint_trajectory_controller],
-            )
-        ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_trajectory_controller,
-                on_exit=[load_imu_sensor_broadcaster],
-            )
-        ),
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        # start_joint_state_publisher_gui_node,
     ])

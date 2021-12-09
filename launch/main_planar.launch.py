@@ -20,7 +20,7 @@ def generate_launch_description():
     # Start Gazebo, robot_state_publisher, joint_state_broadcaster, velocity_controller
     start_world = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_tratsah, 'launch', 'gazebo.launch.py'),
+            os.path.join(pkg_tratsah, 'launch', 'gazebo_planar.launch.py'),
         )
     )
 
@@ -43,6 +43,6 @@ def generate_launch_description():
             default_value='true',
             description='Use simulation (Gazebo) clock if true'),
         start_world,
-        # rviz,
+        rviz,
         node_controller,
     ])

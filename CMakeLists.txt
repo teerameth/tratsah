@@ -30,6 +30,7 @@ install(DIRECTORY
   meshes
   xacro
   rviz
+  worlds
   DESTINATION share/${PROJECT_NAME}/
 )
 
@@ -58,6 +59,8 @@ install(PROGRAMS
   #scripts/publisher_member_function.py
   scripts/subscriber_member_function.py
   scripts/teleop_omni_joystick.py
+  scripts/teleop_twist_joystick.py
+  scripts/teleop_planar_joystick.py
   scripts/controller.py
   DESTINATION lib/${PROJECT_NAME}
 )

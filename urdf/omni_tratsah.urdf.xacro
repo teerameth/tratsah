@@ -18,6 +18,12 @@
       <origin xyz="-0.45 -0.45 0" rpy="1.5708 0 -0.7854"/>
     </xacro:omni_wheel>
 
+    <link name="base_footprint"/>
+    <joint name="base_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+    </joint>
 
     <link name="base_link">
       <inertial>
@@ -162,10 +168,10 @@
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>100.0</updateRate>
-        <body_name>base_link</body_name>
+        <body_name>base_footprint</body_name>
         <topicName>odom</topicName>
         <gaussianNoise>0.01</gaussianNoise>
-        <frameName>world</frameName>
+        <frameName>odom</frameName>
         <xyzOffsets>0 0 0</xyzOffsets>
         <rpyOffsets>0 0 0</rpyOffsets>
       </plugin>
