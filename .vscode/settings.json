@@ -1,0 +1,12 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/teera/dev_ws/install/tratsah/lib/python3.8/site-packages",
+        "/opt/ros/foxy/lib/python3.8/site-packages",
+        "~/home/teera/.virtualenvs/cv/lib/python3.8/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/teera/dev_ws/install/tratsah/lib/python3.8/site-packages",
+        "/opt/ros/foxy/lib/python3.8/site-packages",
+        "~/home/teera/.virtualenvs/cv/lib/python3.8/site-packages"
+    ]
+}
