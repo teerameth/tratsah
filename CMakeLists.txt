@@ -28,28 +28,27 @@ install(DIRECTORY
   config
   urdf
   meshes
-  xacro
   rviz
   worlds
   DESTINATION share/${PROJECT_NAME}/
 )
 
 # Create Cpp executable
-add_executable(hello_world src/hello_world.cpp)
-target_include_directories(hello_world PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+# add_executable(hello_world src/hello_world.cpp)
+# target_include_directories(hello_world PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
 
-add_executable(example_velocity examples/example_velocity.cpp)
-ament_target_dependencies(example_velocity
-  rclcpp
-  std_msgs
-)
+# add_executable(example_velocity examples/example_velocity.cpp)
+# ament_target_dependencies(example_velocity
+#   rclcpp
+#   std_msgs
+# )
 
 
 # Install Cpp executables
-install(TARGETS hello_world example_velocity
-  DESTINATION lib/${PROJECT_NAME})
+# install(TARGETS hello_world example_velocity
+#   DESTINATION lib/${PROJECT_NAME})
 
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
@@ -57,11 +56,9 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   #scripts/teleop_twist_keyboard.py
   #scripts/publisher_member_function.py
-  scripts/subscriber_member_function.py
   scripts/teleop_omni_joystick.py
   scripts/teleop_twist_joystick.py
   scripts/teleop_planar_joystick.py
-  scripts/controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

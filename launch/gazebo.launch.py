@@ -15,11 +15,6 @@ from launch_ros.actions import Node
 import xacro
 
 def generate_launch_description():
-    
-    # gazebo = IncludeLaunchDescription(
-    #             PythonLaunchDescriptionSource([os.path.join(
-    #                 get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-    #          )
     tratsah_path = os.path.join(
         get_package_share_directory('tratsah'))
     
@@ -29,19 +24,12 @@ def generate_launch_description():
         cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_factory.so', world_path],
         output='screen')
 
-    # urdf_path = os.path.join(tratsah_path,
-    #                           'urdf',
-    #                           'omni_tratsah.urdf')
-    # urdf = open(urdf_path).read()
-
     xacro_file = os.path.join(tratsah_path,
                               'urdf',
-                              'omni_tratsah.urdf.xacro')
+                              'tratsah.urdf.xacro')
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc)
     params = {'robot_description': doc.toxml()}
-
-    ### For Xacro ###
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -49,17 +37,9 @@ def generate_launch_description():
         parameters=[params]
     )
 
-    ### For URDF ###
-    # node_robot_state_publisher = Node(
-    #     package='robot_state_publisher',
-    #     executable='robot_state_publisher',
-    #     output='screen',
-    #     parameters=[{'robot_description': urdf}]
-    # )
-
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'test_omni_robot'],
+                                   '-entity', 'tratsah'],
                         output='screen')
 
     load_joint_state_controller = ExecuteProcess(
@@ -72,17 +52,15 @@ def generate_launch_description():
         output='screen'
     )
 
-    load_imu_sensor_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', 'imu_sensor_broadcaster'],
+    load_nav_bringup = ExecuteProcess(
+        cmd=['ros2', 'launch', 'nav2_bringup', 'navigation_launch.py', 'use_sim_time:=True'],
         output='screen'
     )
 
-    # gui = LaunchConfiguration('gui')
-    # start_joint_state_publisher_gui_node = Node(
-    #     condition=IfCondition(gui),
-    #     package='joint_state_publisher_gui',
-    #     executable='joint_state_publisher_gui',
-    #     name='joint_state_publisher_gui')
+    load_slam_toolbox = ExecuteProcess(
+        cmd=['ros2', 'launch', 'slam_toolbox', 'online_async_launch.py', 'use_sim_time:=True'],
+        output='screen'
+    )
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -101,14 +79,9 @@ def generate_launch_description():
                 on_exit=[load_joint_trajectory_controller],
             )
         ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_trajectory_controller,
-                on_exit=[load_imu_sensor_broadcaster],
-            )
-        ),
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        # start_joint_state_publisher_gui_node,
+        load_nav_bringup,
+        load_slam_toolbox,
     ])

@@ -4,7 +4,7 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, TimerAction # Delay
 from launch.actions import IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -27,7 +27,8 @@ def generate_launch_description():
     rviz_file_name = 'tratsah.rviz'
     rviz_file_path = os.path.join(pkg_tratsah, 'rviz', rviz_file_name)
     rviz = ExecuteProcess(
-        cmd=['rviz2', '-d', rviz_file_path],
+        cmd=['rviz2',
+        '-d', rviz_file_path],
         output='screen')
 
     # Controller
@@ -43,6 +44,7 @@ def generate_launch_description():
             default_value='true',
             description='Use simulation (Gazebo) clock if true'),
         start_world,
-        # rviz,
-        node_controller,
+        TimerAction(actions = [rviz], period = 8.0),
+        # node_controller,
+
     ])
