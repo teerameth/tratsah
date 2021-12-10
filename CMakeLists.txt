@@ -62,6 +62,8 @@ install(PROGRAMS
   scripts/teleop_twist_joystick.py
   scripts/teleop_planar_joystick.py
   scripts/aruco_service.py
+  scripts/commander.py
+  scripts/robot_navigator.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
