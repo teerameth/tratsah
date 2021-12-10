@@ -143,7 +143,7 @@
 	<gazebo reference="laser_link">
 		<sensor type="ray" name="head_hokuyo_sensor">
 			<pose>0 0 0 0 0 0</pose>
-			<visualize>True</visualize>
+			<visualize>False</visualize>
 			<update_rate>40</update_rate>
 			<ray>
 				<scan>

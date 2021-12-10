@@ -44,7 +44,7 @@ def generate_launch_description():
             default_value='true',
             description='Use simulation (Gazebo) clock if true'),
         start_world,
-        TimerAction(actions = [rviz], period = 8.0),
+        # TimerAction(actions = [rviz], period = 8.0),
         # node_controller,
 
     ])

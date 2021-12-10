@@ -13,7 +13,7 @@
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0"/>
 				<geometry>
-				<mesh filename="$(find tratsah)/meshes/dae/Torus.dae" scale="0.2 0.2 0.2"/>
+				<mesh filename="file://$(find tratsah)/meshes/dae/Torus.dae" scale="0.2 0.2 0.2"/>
 				</geometry>
 				<material name="Black"/>
 			</visual>

@@ -28,7 +28,9 @@ install(DIRECTORY
   config
   urdf
   meshes
+  map
   rviz
+  param
   worlds
   DESTINATION share/${PROJECT_NAME}/
 )
@@ -59,6 +61,7 @@ install(PROGRAMS
   scripts/teleop_omni_joystick.py
   scripts/teleop_twist_joystick.py
   scripts/teleop_planar_joystick.py
+  scripts/aruco_service.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
