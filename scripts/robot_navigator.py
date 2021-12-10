@@ -5,8 +5,8 @@ from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from lifecycle_msgs.srv import GetState
-from nav2_msgs.action import ComputePathThroughPoses, ComputePathToPose
-from nav2_msgs.action import FollowWaypoints, NavigateThroughPoses, NavigateToPose
+from nav2_msgs.action import ComputePathToPose, ComputePathToPose
+from nav2_msgs.action import FollowWaypoints, NavigateToPose, NavigateToPose
 from nav2_msgs.srv import ClearEntireCostmap, GetCostmap, LoadMap, ManageLifecycleNodes
 
 import rclpy
@@ -42,13 +42,13 @@ class BasicNavigator(Node):
 
         self.initial_pose_received = False
         self.nav_through_poses_client = ActionClient(self,
-                                                     NavigateThroughPoses,
+                                                     NavigateToPose,
                                                      'navigate_through_poses')
         self.nav_to_pose_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
         self.follow_waypoints_client = ActionClient(self, FollowWaypoints, 'follow_waypoints')
         self.compute_path_to_pose_client = ActionClient(self, ComputePathToPose,
                                                         'compute_path_to_pose')
-        self.compute_path_through_poses_client = ActionClient(self, ComputePathThroughPoses,
+        self.compute_path_through_poses_client = ActionClient(self, ComputePathToPose,
                                                               'compute_path_through_poses')
         self.localization_pose_sub = self.create_subscription(PoseWithCovarianceStamped,
                                                               'amcl_pose',
@@ -77,7 +77,7 @@ class BasicNavigator(Node):
         while not self.nav_through_poses_client.wait_for_server(timeout_sec=1.0):
             self.info("'NavigateThroughPoses' action server not available, waiting...")
 
-        goal_msg = NavigateThroughPoses.Goal()
+        goal_msg = NavigateToPose.Goal()
         goal_msg.poses = poses
 
         self.info(f'Navigating with {len(goal_msg.poses)} goals....')
@@ -222,7 +222,7 @@ class BasicNavigator(Node):
         while not self.compute_path_through_poses_client.wait_for_server(timeout_sec=1.0):
             self.info("'ComputePathThroughPoses' action server not available, waiting...")
 
-        goal_msg = ComputePathThroughPoses.Goal()
+        goal_msg = ComputePathToPose.Goal()
         goal_msg.goals = goals
         goal_msg.start = start
 

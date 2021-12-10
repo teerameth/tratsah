@@ -6,6 +6,8 @@ import rclpy
 from rclpy.duration import Duration
 import time
 
+from rclpy import Node
+
 bed_positions = {
     '1': (-30.20, 6.77, 0.18, 0.98),
     '2': (-19.22, 8.75, 0.97, 0.24),
