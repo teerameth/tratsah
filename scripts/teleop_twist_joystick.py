@@ -91,12 +91,11 @@ class JoystickPub(Node):
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
         ### Prepare data & send ###
-        if abs(axes_value[3]) + abs(axes_value[4]) > 1: # Update only joystick moved more than half distance
-            self.omega_z = math.atan2(-axes_value[4], axes_value[3])
+        self.omega_z = -axes_value[3]
         # self.array.data = [axes_value[0], -axes_value[1], self.omega_z]  # [v_x, v_y, omega_z]
         twist = geometry_msgs.msg.Twist()
-        twist.linear.x = axes_value[0]
-        twist.linear.y = -axes_value[1]
+        twist.linear.x = -axes_value[1]
+        twist.linear.y = -axes_value[0]
         twist.linear.z = 0.0
         twist.angular.x = 0.0
         twist.angular.y = 0.0
