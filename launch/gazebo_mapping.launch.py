@@ -52,17 +52,15 @@ def generate_launch_description():
         output='screen'
     )
 
-    # load_nav_bringup = ExecuteProcess(
-    #     cmd=['ros2', 'launch', 'nav2_bringup', 'navigation_launch.py', 'use_sim_time:=True',
-    #     'autostart:=False',
-    #     'map:=/home/teera/dev_ws/src/tratsah/worlds/my_map.yaml'],
-    #     output='screen'
-    # )
+    load_nav_bringup = ExecuteProcess(
+        cmd=['ros2', 'launch', 'nav2_bringup', 'navigation_launch.py', 'use_sim_time:=True'],
+        output='screen'
+    )
 
-    # load_slam_toolbox = ExecuteProcess(
-    #     cmd=['ros2', 'launch', 'slam_toolbox', 'online_async_launch.py', 'use_sim_time:=True'],
-    #     output='screen'
-    # )
+    load_slam_toolbox = ExecuteProcess(
+        cmd=['ros2', 'launch', 'slam_toolbox', 'online_async_launch.py', 'use_sim_time:=True'],
+        output='screen'
+    )
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -84,6 +82,6 @@ def generate_launch_description():
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        # load_nav_bringup,
-        # load_slam_toolbox,
+        load_nav_bringup,
+        load_slam_toolbox,
     ])

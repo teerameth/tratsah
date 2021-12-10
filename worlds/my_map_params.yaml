@@ -1,0 +1,4 @@
+# my_map_params.yaml
+map_server:
+    ros__parameters:
+        yaml_filename: "my_map.yaml"
