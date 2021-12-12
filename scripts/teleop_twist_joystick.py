@@ -8,6 +8,8 @@ from rclpy.node import Node
 import geometry_msgs.msg
 import rclpy
 
+multiplier = 2.5
+
 class JoystickPub(Node):
     def __init__(self):
         super().__init__('teleop_twist_joystick')     # Create Node
@@ -94,12 +96,12 @@ class JoystickPub(Node):
         self.omega_z = -axes_value[3]
         # self.array.data = [axes_value[0], -axes_value[1], self.omega_z]  # [v_x, v_y, omega_z]
         twist = geometry_msgs.msg.Twist()
-        twist.linear.x = -axes_value[1]
-        twist.linear.y = -axes_value[0]
+        twist.linear.x = -axes_value[1] * multiplier
+        twist.linear.y = -axes_value[0] * multiplier
         twist.linear.z = 0.0
         twist.angular.x = 0.0
         twist.angular.y = 0.0
-        twist.angular.z = self.omega_z
+        twist.angular.z = self.omega_z * multiplier
         self.publisher_.publish(twist)
 def main(args = None):
     rclpy.init(args=args)

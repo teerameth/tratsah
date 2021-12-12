@@ -18,7 +18,7 @@ def generate_launch_description():
     tratsah_path = os.path.join(
         get_package_share_directory('tratsah'))
     
-    world_file_name = "test.world"
+    world_file_name = "test2.world"
     world_path = os.path.join(tratsah_path, "worlds", world_file_name)
     gazebo = ExecuteProcess(
         cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_factory.so', world_path],
@@ -69,12 +69,12 @@ def generate_launch_description():
             'use_sim_time',
             default_value='true',
             description='Use simulation (Gazebo) clock if true'),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=spawn_entity,
-                on_exit=[load_joint_state_controller],
-            )
-        ),
+        # RegisterEventHandler(
+        #     event_handler=OnProcessExit(
+        #         target_action=spawn_entity,
+        #         on_exit=[load_joint_state_controller],
+        #     )
+        # ),
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=load_joint_state_controller,
