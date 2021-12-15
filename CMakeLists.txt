@@ -22,6 +22,12 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
 
+## msg file for service-client ##
+find_package(rosidl_default_generators REQUIRED)
+set(msg_files
+  "msg/markerCorner.msg"
+)
+
 # Include Cpp "include" directory
 install(DIRECTORY
   launch
@@ -64,6 +70,7 @@ install(PROGRAMS
   scripts/aruco_service.py
   scripts/commander.py
   scripts/robot_navigator.py
+  scripts/get_image.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
